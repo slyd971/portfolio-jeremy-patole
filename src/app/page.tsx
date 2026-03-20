@@ -283,7 +283,6 @@ export default function Page() {
       </div>
     </div>
   </div>
-
 {/* ===================== DESKTOP VERSION ===================== */}
 <div className="hidden lg:block">
   <div className="relative overflow-hidden rounded-[1.45rem] border border-white/10 bg-white/[0.04] backdrop-blur-2xl">
@@ -292,36 +291,36 @@ export default function Page() {
     <img
       src="/hero.jpg"
       alt="Hero"
-      className="absolute inset-0 h-full w-full object-cover object-[70%_20%] scale-[1.05] opacity-80"
+      className="absolute inset-0 h-full w-full object-cover object-[66%_18%] scale-[1.02] opacity-78"
     />
 
-    <div className="absolute inset-0 bg-gradient-to-r from-[#050816] via-[#050816]/90 to-transparent" />
+    {/* OVERLAY */}
+    <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,8,22,0.96)_0%,rgba(5,8,22,0.90)_26%,rgba(5,8,22,0.62)_48%,rgba(5,8,22,0.22)_72%,rgba(5,8,22,0.12)_100%)]" />
 
     {/* CONTENT */}
-    <div className="relative z-10 flex flex-col gap-8 p-8 lg:py-12">
+    <div className="relative z-10 flex flex-col gap-8 p-8 lg:px-10 lg:py-10 xl:px-12 xl:py-12">
 
       {/* TEXT */}
-      <div className="max-w-2xl">
+      <div className="max-w-[820px]">
         <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/70">
           <BadgeCheck size={14} className="text-[#60A5FA]" />
           Disponible • Profil hybride data & ingénierie
         </div>
 
-        <h1 className="text-[3.2rem] font-semibold leading-tight">
-          J’analyse, je structure et j’exécute{" "}
-          <span className="text-white/40">dans des contextes</span>{" "}
-          <span className="text-[#60A5FA]">
-            techniques, data et industriels.
-          </span>
-        </h1>
+    <h1 className="max-w-[720px] text-[3.3rem] font-semibold leading-[1.05] tracking-tight text-white xl:text-[3.7rem]">
+  J’analyse, je structure et j’exécute{" "}
+  <span className="block">dans des contextes</span>
+  <span className="block">techniques, data</span>
+  <span className="block">et industriels.</span>
+</h1>
 
-        <p className="mt-5 text-base text-white/70 leading-7">
+        <p className="mt-5 max-w-[760px] text-[1.02rem] leading-8 text-white/72">
           Profil polyvalent à la croisée de l’ingénierie, de l’analyse de données
           et de l’exécution terrain.
         </p>
       </div>
 
-      {/* STATS */}
+      {/* STATS (TON BLOC ORIGINAL) */}
       <div className="grid grid-cols-4 gap-4">
         {stats.map((item) => (
           <div
