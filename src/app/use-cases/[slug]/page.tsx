@@ -18,7 +18,18 @@ export function generateStaticParams() {
     slug: item.slug,
   }));
 }
+export async function generateMetadata({ params }) {
+  const useCase = getUseCaseBySlug(params.slug);
 
+  if (!useCase) {
+    return {};
+  }
+
+  return {
+    title: `${useCase.title} | Jérémy Morgan`,
+    description: useCase.summary,
+  };
+}
 export default async function UseCasePage({
   params,
 }: {
