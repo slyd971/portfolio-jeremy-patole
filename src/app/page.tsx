@@ -1,26 +1,62 @@
 "use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useCases } from "@/data/useCases";
 import {
   Mail,
   Briefcase,
-  Target,
   BadgeCheck,
-  ChevronDown,
-  ArrowUpRight,
   Building2,
   Trophy,
-  Workflow,
-  Gauge,
-  Menu,
   Sparkles,
   Cpu,
   Languages,
   Music2,
+  Menu,
+  X,
+  Github,
+  Linkedin,
 } from "lucide-react";
-import { motion } from "framer-motion";
 
 export default function Page() {
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY < 20) {
+        setIsHeaderVisible(true);
+      } else if (Math.abs(currentScrollY - lastScrollY) < 8) {
+        return;
+      } else if (currentScrollY > lastScrollY) {
+        setIsHeaderVisible(false);
+      } else {
+        setIsHeaderVisible(true);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
+
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobileMenuOpen]);
+
   const stats = [
     { value: "3+", label: "années d’expérience en environnement technique" },
     { value: "3", label: "univers croisés : data, aéronautique, terrain" },
@@ -143,206 +179,291 @@ export default function Page() {
     "PLM",
   ];
 
+  const navItems = [
+    ["Profil", "#profil"],
+    ["Expertise", "#expertise"],
+    ["Expériences", "#experiences"],
+    ["Projets", "#projects"],
+    ["Environnements", "#clients"],
+    ["Use Cases", "#use-cases"],
+    ["Stack", "#stack"],
+    ["Contact", "#contact"],
+  ];
+
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#050816] text-white scroll-smooth">
       <div className="fixed inset-0 -z-30 bg-[#050816]" />
       <div className="fixed inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.22),transparent_24%),radial-gradient(circle_at_80%_10%,rgba(96,165,250,0.12),transparent_22%),radial-gradient(circle_at_bottom_right,rgba(37,99,235,0.16),transparent_20%)]" />
       <div className="fixed inset-0 -z-10 bg-[linear-gradient(to_bottom,rgba(255,255,255,0.04),transparent_18%,transparent_82%,rgba(255,255,255,0.04))]" />
 
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#050816]/80 backdrop-blur-2xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 lg:px-10 lg:py-4">
-          <a href="#top" className="flex min-w-0 items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-sm font-semibold text-[#60A5FA] shadow-[0_0_40px_rgba(96,165,250,0.15)]">
-              JP
-            </div>
-            <div className="min-w-0">
-              <p className="truncate text-sm font-semibold tracking-wide">
-                Jérémy-Morgan PATOLE
-              </p>
-              <p className="truncate text-[11px] text-white/50">
-                Data Analyste • Ingénieur d’étude aéronautique • DJ
-              </p>
-            </div>
-          </a>
-
-          <nav className="hidden items-center gap-2 rounded-full border border-white/10 bg-white/5 p-2 shadow-[0_0_30px_rgba(37,99,235,0.08)] lg:flex">
-            {[
-              ["Profil", "#profil"],
-              ["Expertise", "#expertise"],
-              ["Expériences", "#experiences"],
-              ["Projets", "#projects"],
-              ["Environnements", "#clients"],
-              ["Stack", "#stack"],
-              ["Contact", "#contact"],
-            ].map(([label, href]) => (
-              <a
-                key={href}
-                href={href}
-                className="rounded-full px-4 py-2 text-sm text-white/70 transition hover:bg-[#2563EB]/20 hover:text-white"
-              >
-                {label}
-              </a>
-            ))}
-          </nav>
-
-          <div className="flex items-center gap-2">
-            <a
-              href="mailto:jerempatole@live.fr"
-              className="hidden items-center gap-2 rounded-full border border-[#60A5FA]/30 bg-[#2563EB]/20 px-4 py-2 text-sm font-semibold text-white transition hover:scale-[1.02] hover:border-[#60A5FA] hover:bg-[#2563EB]/35 sm:inline-flex"
-            >
-              <Mail size={16} />
-              Contact
-            </a>
-
-            <a
-              href="#contact"
-              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs font-medium text-white/80 lg:hidden"
-            >
-              <Menu size={15} />
-              Contact
-            </a>
-          </div>
-        </div>
-      </header>
-
-      <div className="h-[72px] sm:h-[78px]" />
-
-      {/* ===================== SECTION HERO ===================== */}
-<section
-  id="top"
-  className="relative mx-auto max-w-7xl scroll-mt-24 px-4 pb-2 pt-2 sm:px-6 sm:pb-3 sm:pt-3 lg:px-10 lg:pb-1 lg:pt-4"
+      <header
+  className={`fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#050816]/80 backdrop-blur-2xl transition-transform duration-500 ease-out ${
+    isHeaderVisible ? "translate-y-0" : "-translate-y-full"
+  }`}
 >
-
-  {/* ===================== MOBILE VERSION ===================== */}
-  <div className="lg:hidden">
-
-    {/* IMAGE */}
-    <div className="overflow-hidden rounded-[1.3rem] border border-white/10">
-      <img
-        src="/hero.jpg"
-        alt="Hero"
-        className="h-[260px] w-full object-cover object-[70%_20%]"
-      />
-    </div>
-
-    {/* TEXTE */}
-    <div className="mt-4">
-
-      <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[10px] uppercase tracking-[0.18em] text-white/70">
-        <BadgeCheck size={12} className="text-[#60A5FA]" />
-        Disponible • Profil hybride
+  <div className="mx-auto flex max-w-[1440px] items-center justify-between px-4 py-3 lg:px-8 xl:px-10">
+    <a href="#top" className="flex min-w-0 items-center gap-4">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-sm font-semibold text-[#60A5FA] shadow-[0_0_40px_rgba(96,165,250,0.15)]">
+        JP
       </div>
 
-      <h1 className="text-[1.6rem] font-semibold leading-tight">
-        J’analyse, je structure et j’exécute{" "}
-        <span className="text-white/40">dans des contextes</span>{" "}
-        <span className="text-[#60A5FA]">
-          techniques, data et industriels.
-        </span>
-      </h1>
+      <div className="min-w-0">
+        <p className="truncate text-[15px] font-semibold tracking-wide text-white">
+          Jérémy-Morgan PATOLE
+        </p>
+        <p className="truncate text-[12px] text-white/50">
+          Data Analyste • Ingénieur aéronautique • DJ
+        </p>
+      </div>
+    </a>
 
-      <p className="mt-3 text-sm text-white/70 leading-6">
-        Profil polyvalent à la croisée de l’ingénierie, de l’analyse de données
-        et de l’exécution terrain.
-      </p>
+    <nav className="hidden lg:flex items-center rounded-full border border-white/10 bg-white/5 px-4 py-2 shadow-[0_0_30px_rgba(37,99,235,0.08)]">
+      {[
+        ["Profil", "#profil"],
+        ["Expertise", "#expertise"],
+        ["Expériences", "#experiences"],
+        ["Projets", "#projects"],
+        ["Environnements", "#clients"],
+        ["Use Cases", "#use-cases"],
+        ["Stack", "#stack"],
+        ["Contact", "#contact"],
+      ].map(([label, href]) => (
+        <a
+          key={href}
+          href={href}
+          className="whitespace-nowrap rounded-full px-5 py-2 text-[15px] font-medium text-white/72 transition hover:bg-[#2563EB]/20 hover:text-white"
+        >
+          {label}
+        </a>
+      ))}
+    </nav>
 
-      {/* CTA */}
-      <div className="mt-4 flex flex-col gap-2">
+    <div className="flex items-center gap-2">
+      <a
+        href="https://www.linkedin.com/in/j%C3%A9r%C3%A9my-patole-674794161/"
+        target="_blank"
+        rel="noreferrer"
+        className="group hidden lg:inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-[15px] font-semibold text-white transition hover:border-[#60A5FA]/40 hover:bg-[#2563EB]/15"
+      >
+        <Linkedin
+          size={16}
+          className="text-white/65 transition group-hover:text-[#60A5FA]"
+        />
+        <span className="whitespace-nowrap">Profil LinkedIn</span>
+      </a>
+
+      <a
+        href="https://www.linkedin.com/in/j%C3%A9r%C3%A9my-patole-674794161/"
+        target="_blank"
+        rel="noreferrer"
+        className="hidden items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-xs font-medium text-white/85 ring-1 ring-white/15 transition hover:bg-[#2563EB]/20 hover:text-white sm:inline-flex lg:hidden"
+      >
+        <Linkedin size={14} className="text-white/70" />
+        LinkedIn
+      </a>
+
+      <button
+        type="button"
+        aria-label={isMobileMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
+        onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+        className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/80 transition hover:bg-white/10 hover:text-white lg:hidden"
+      >
+        {isMobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
+      </button>
+    </div>
+  </div>
+
+  {isMobileMenuOpen && (
+    <div className="border-t border-white/10 bg-[#050816]/95 px-4 pb-4 pt-3 backdrop-blur-2xl lg:hidden">
+      <div className="flex flex-col gap-2">
+        {navItems.map(([label, href]) => (
+          <a
+            key={href}
+            href={href}
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-medium text-white/80 transition hover:bg-[#2563EB]/15 hover:text-white"
+          >
+            {label}
+          </a>
+        ))}
+      </div>
+
+      <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
+        <a
+          href="https://www.linkedin.com/in/j%C3%A9r%C3%A9my-patole-674794161/"
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#2563EB]/15"
+        >
+          <Linkedin size={16} className="text-[#60A5FA]" />
+          Voir le profil LinkedIn
+        </a>
+
         <a
           href="mailto:jerempatole@live.fr"
-          className="flex items-center justify-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-black"
+          className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-4 py-3 text-sm font-semibold text-black transition hover:scale-[1.01]"
         >
           <Mail size={16} />
           Me contacter
         </a>
-
-        <a
-          href="#experiences"
-          className="flex items-center justify-center gap-2 rounded-full border border-white/10 px-5 py-2.5 text-sm"
-        >
-          Voir l’expérience
-          <ArrowUpRight size={14} />
-        </a>
-      </div>
-
-      {/* STATS */}
-      <div className="mt-5 grid grid-cols-2 gap-2.5">
-        {stats.map((item) => (
-          <div
-            key={item.label}
-            className="rounded-[0.9rem] border border-white/10 bg-white/5 p-3"
-          >
-            <div className="text-base font-semibold text-[#93C5FD]">
-              {item.value}
-            </div>
-            <div className="text-[10px] text-white/60">
-              {item.label}
-            </div>
-          </div>
-        ))}
       </div>
     </div>
-  </div>
-{/* ===================== DESKTOP VERSION ===================== */}
-<div className="hidden lg:block">
-  <div className="relative overflow-hidden rounded-[1.45rem] border border-white/10 bg-white/[0.04] backdrop-blur-2xl">
+  )}
+</header>
 
-    {/* IMAGE BACKGROUND */}
-    <img
-      src="/hero.jpg"
-      alt="Hero"
-      className="absolute inset-0 h-full w-full object-cover object-[66%_18%] scale-[1.02] opacity-78"
-    />
+      <div className="h-[72px] sm:h-[78px]" />
 
-    {/* OVERLAY */}
-    <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,8,22,0.96)_0%,rgba(5,8,22,0.90)_26%,rgba(5,8,22,0.62)_48%,rgba(5,8,22,0.22)_72%,rgba(5,8,22,0.12)_100%)]" />
+      <section
+        id="top"
+        className="relative mx-auto max-w-7xl scroll-mt-24 px-4 pb-2 pt-2 sm:px-6 sm:pb-3 sm:pt-3 lg:px-10 lg:pb-1 lg:pt-4"
+      >
+        <div className="lg:hidden">
+          <div className="overflow-hidden rounded-[1.3rem] border border-white/10">
+            <img
+              src="/hero.jpg"
+              alt="Hero"
+              className="h-[260px] w-full object-cover object-[70%_20%]"
+            />
+          </div>
 
-    {/* CONTENT */}
-    <div className="relative z-10 flex flex-col gap-8 p-8 lg:px-10 lg:py-10 xl:px-12 xl:py-12">
+          <div className="mt-4">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[10px] uppercase tracking-[0.18em] text-white/70">
+              <BadgeCheck size={12} className="text-[#60A5FA]" />
+              Disponible • Profil hybride
+            </div>
 
-      {/* TEXT */}
-      <div className="max-w-[820px]">
-        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/70">
-          <BadgeCheck size={14} className="text-[#60A5FA]" />
-          Disponible • Profil hybride data & ingénierie
+            <h1 className="text-[1.6rem] font-semibold leading-tight">
+              J’analyse, je structure et j’exécute{" "}
+              <span className="text-white/40">dans des contextes</span>{" "}
+              <span className="text-[#60A5FA]">
+                techniques, data et industriels.
+              </span>
+            </h1>
+
+            <p className="mt-3 text-sm leading-6 text-white/70">
+              Profil polyvalent à la croisée de l’ingénierie, de l’analyse de
+              données et de l’exécution terrain.
+            </p>
+
+            <div className="mt-4 flex flex-col gap-2">
+              <a
+                href="mailto:jerempatole@live.fr"
+                className="flex items-center justify-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-black"
+              >
+                <Mail size={16} />
+                Me contacter
+              </a>
+
+              <a
+                href="https://www.linkedin.com/in/j%C3%A9r%C3%A9my-patole-674794161/"
+                target="_blank"
+                rel="noreferrer"
+                className="group flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white transition hover:border-[#60A5FA]/40 hover:bg-[#2563EB]/15 hover:text-white"
+              >
+                <Linkedin
+                  size={16}
+                  className="text-white/70 transition group-hover:text-[#60A5FA]"
+                />
+                <span>Voir le profil LinkedIn</span>
+              </a>
+            </div>
+
+            <div className="mt-5 grid grid-cols-2 gap-2.5">
+              {stats.map((item) => (
+                <div
+                  key={item.label}
+                  className="rounded-[0.9rem] border border-white/10 bg-white/5 p-3"
+                >
+                  <div className="text-base font-semibold text-[#93C5FD]">
+                    {item.value}
+                  </div>
+                  <div className="text-[10px] text-white/60">
+                    {item.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
-    <h1 className="max-w-[720px] text-[3.3rem] font-semibold leading-[1.05] tracking-tight text-white xl:text-[3.7rem]">
-  J’analyse, je structure et j’exécute{" "}
-  <span className="block">dans des contextes</span>
-  <span className="block">techniques, data</span>
-  <span className="block">et industriels.</span>
-</h1>
+        <div className="hidden lg:block">
+          <div className="relative overflow-hidden rounded-[1.45rem] border border-white/10 bg-white/[0.04] backdrop-blur-2xl">
+            <img
+              src="/hero.jpg"
+              alt="Hero"
+              className="absolute inset-0 h-full w-full scale-[1.02] object-cover object-[66%_18%] opacity-80"
+            />
 
-        <p className="mt-5 max-w-[760px] text-[1.02rem] leading-8 text-white/72">
-          Profil polyvalent à la croisée de l’ingénierie, de l’analyse de données
-          et de l’exécution terrain.
-        </p>
-      </div>
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,8,22,0.96)_0%,rgba(5,8,22,0.90)_26%,rgba(5,8,22,0.62)_48%,rgba(5,8,22,0.22)_72%,rgba(5,8,22,0.12)_100%)]" />
 
-      {/* STATS (TON BLOC ORIGINAL) */}
-      <div className="grid grid-cols-4 gap-4">
-        {stats.map((item) => (
-          <div
-            key={item.label}
-            className="rounded-[1.1rem] border border-white/10 bg-white/5 p-4"
-          >
-            <div className="text-xl font-semibold text-[#93C5FD]">
-              {item.value}
-            </div>
-            <div className="text-sm text-white/60">
-              {item.label}
+            <div className="relative z-10 flex flex-col gap-8 p-8 lg:px-10 lg:py-10 xl:px-12 xl:py-12">
+              <div className="max-w-[820px]">
+                <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/70">
+                  <BadgeCheck size={14} className="text-[#60A5FA]" />
+                  Disponible • Profil hybride data & ingénierie
+                </div>
+
+                <h1 className="max-w-[720px] text-[3.3rem] font-semibold leading-[1.05] tracking-tight xl:text-[3.7rem]">
+                  <span className="text-white">
+                    J’analyse, je structure et j’exécute
+                  </span>
+                  <span className="block text-white/40">
+                    dans des contextes
+                  </span>
+                  <span className="block text-[#60A5FA]">
+                    techniques, data
+                  </span>
+                  <span className="block text-[#60A5FA]">
+                    et industriels.
+                  </span>
+                </h1>
+
+                <p className="mt-5 max-w-[760px] text-[1.02rem] leading-8 text-white/72">
+                  Profil polyvalent à la croisée de l’ingénierie, de l’analyse
+                  de données et de l’exécution terrain.
+                </p>
+
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <a
+                    href="mailto:jerempatole@live.fr"
+                    className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-black transition hover:scale-[1.02]"
+                  >
+                    <Mail size={17} />
+                    Me contacter
+                  </a>
+
+                  <a
+                    href="https://www.linkedin.com/in/j%C3%A9r%C3%A9my-patole-674794161/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="group inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white shadow-[0_0_25px_rgba(96,165,250,0.15)] transition hover:border-[#60A5FA]/40 hover:bg-[#2563EB]/15"
+                  >
+                    <Linkedin
+                      size={16}
+                      className="text-white/70 transition group-hover:text-[#60A5FA]"
+                    />
+                    <span>Voir le profil LinkedIn</span>
+                  </a>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-4 gap-4">
+                {stats.map((item) => (
+                  <div
+                    key={item.label}
+                    className="rounded-[1.1rem] border border-white/10 bg-white/5 p-4"
+                  >
+                    <div className="text-xl font-semibold text-[#93C5FD]">
+                      {item.value}
+                    </div>
+                    <div className="text-sm text-white/60">{item.label}</div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        ))}
-      </div>
-
-    </div>
-  </div>
-</div>
-
-</section>
-      {/* ===================== SECTION PROFIL ===================== */}
+        </div>
+      </section>
 
       <section
         id="profil"
@@ -368,7 +489,8 @@ export default function Page() {
               Aujourd’hui, il élargit ce socle avec une reconversion active vers
               la data et l’intelligence artificielle, en s’appuyant sur des
               outils comme Python, MySQL, Tableau et Power BI pour structurer,
-              analyser et valoriser l’information.
+              analyser et valoriser l’information afin de transformer des
+              insights en décisions business claires.
             </p>
           </div>
         </div>
@@ -393,8 +515,6 @@ export default function Page() {
         </div>
       </section>
 
-      {/* ===================== SECTION EXPERTISE ===================== */}
-
       <section
         id="expertise"
         className="mx-auto max-w-7xl scroll-mt-24 px-4 py-4 sm:px-6 sm:py-6 lg:px-10 lg:py-8"
@@ -415,20 +535,17 @@ export default function Page() {
           </div>
         </div>
 
-       {/* ===== GRID EXPERTISE ===== */}
-<div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-3">
-  {expertise.map((item) => (
-    <div
-      key={item}
-      className="flex min-h-[72px] items-center rounded-[1rem] border border-white/10 bg-white/5 p-3 text-[12px] font-medium leading-5 text-white/78 transition hover:border-[#60A5FA]/40 hover:bg-[#2563EB]/10 sm:min-h-[84px] sm:rounded-[1.2rem] sm:p-4 sm:text-sm"
-    >
-      {item}
-    </div>
-  ))}
-</div>
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-3">
+          {expertise.map((item) => (
+            <div
+              key={item}
+              className="flex min-h-[72px] items-center rounded-[1rem] border border-white/10 bg-white/5 p-3 text-[12px] font-medium leading-5 text-white/78 transition hover:border-[#60A5FA]/40 hover:bg-[#2563EB]/10 sm:min-h-[84px] sm:rounded-[1.2rem] sm:p-4 sm:text-sm"
+            >
+              {item}
+            </div>
+          ))}
+        </div>
       </section>
-
-      {/* ===================== SECTION EXPERIENCE ===================== */}
 
       <section
         id="experiences"
@@ -466,6 +583,7 @@ export default function Page() {
                     {exp.company}
                   </p>
                 </div>
+
                 <div className="w-fit rounded-full border border-[#60A5FA]/30 bg-[#2563EB]/15 px-3 py-2 text-xs text-[#BFDBFE] sm:px-4 sm:text-sm">
                   {exp.badge}
                 </div>
@@ -488,8 +606,6 @@ export default function Page() {
           ))}
         </div>
       </section>
-
-      {/* ===================== SECTION PROJETS ===================== */}
 
       <section
         id="projects"
@@ -522,8 +638,6 @@ export default function Page() {
         </div>
       </section>
 
-      {/* ===================== SECTION CLIENTS ===================== */}
-
       <section
         id="clients"
         className="mx-auto max-w-7xl scroll-mt-24 px-4 py-4 sm:px-6 sm:py-6 lg:px-10 lg:py-8"
@@ -555,52 +669,101 @@ export default function Page() {
           </div>
         </div>
       </section>
-{/* ===================== USE CASES ===================== */}
-<section
-  id="use-cases"
-  className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-10"
->
-  <h2 className="text-2xl font-semibold md:text-4xl">
-    Use Cases
-  </h2>
 
-  <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-    {useCases.map((item) => (
-      <Link
-        key={item.slug}
-        href={`/use-cases/${item.slug}`}
-        className="group rounded-2xl border border-white/10 bg-white/5 p-5 transition hover:bg-white/10"
+      <section
+        id="use-cases"
+        className="mx-auto max-w-7xl scroll-mt-24 px-4 py-6 sm:px-6 lg:px-10 lg:py-8"
       >
-        <div className="flex items-center gap-3">
-          <span className="text-2xl">{item.emoji}</span>
-          <h3 className="text-lg font-semibold text-white">
-            {item.title}
-          </h3>
+        <div className="mb-4 sm:mb-5">
+          <p className="text-xs uppercase tracking-[0.24em] text-[#60A5FA] sm:text-sm">
+            Use Cases
+          </p>
+          <h2 className="mt-2 text-2xl font-semibold sm:text-3xl md:text-4xl">
+            Cas concrets & projets data
+          </h2>
+          <p className="mt-3 max-w-2xl text-sm leading-7 text-white/68 sm:text-base sm:leading-8">
+            Une sélection de projets orientés analyse, expérimentation, exploration
+            de données et restitution claire, avec accès direct aux repos GitHub.
+          </p>
         </div>
 
-        <p className="mt-3 text-sm text-white/70">
-          {item.summary}
-        </p>
-
-        <div className="mt-4 flex flex-wrap gap-2">
-          {item.tags.slice(0, 3).map((tag) => (
-            <span
-              key={tag}
-              className="rounded-full bg-black/30 px-3 py-1 text-xs text-white/70"
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {useCases.map((item) => (
+            <article
+              key={item.slug}
+              className="group flex h-full flex-col rounded-[1.35rem] border border-white/10 bg-white/5 p-5 transition hover:border-[#60A5FA]/35 hover:bg-white/10 sm:rounded-[1.6rem] sm:p-6"
             >
-              {tag}
-            </span>
+              <Link href={`/use-cases/${item.slug}`} className="block">
+                <div className="flex items-start gap-3">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-black/20 text-2xl">
+                    {item.emoji}
+                  </div>
+
+                  <div className="min-w-0">
+                    <h3 className="text-lg font-semibold text-white sm:text-xl">
+                      {item.title}
+                    </h3>
+
+                    {item.subtitle && (
+                      <p className="mt-1 text-sm text-white/55">
+                        {item.subtitle}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <p className="mt-4 text-sm leading-7 text-white/70">
+                  {item.summary}
+                </p>
+
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {item.tags.slice(0, 4).map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-full border border-white/10 bg-black/20 px-3 py-1 text-xs text-white/70"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </Link>
+
+              <div className="mt-6 flex flex-wrap gap-2">
+                <Link
+                  href={`/use-cases/${item.slug}`}
+                  className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white/80 transition hover:bg-white/10 hover:text-white"
+                >
+                  Voir le détail
+                </Link>
+
+                {item.github && (
+                  <a
+                    href={item.github}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center justify-center gap-2 rounded-full border border-[#60A5FA]/20 bg-[#2563EB]/10 px-4 py-2 text-sm font-medium text-[#BFDBFE] transition hover:border-[#60A5FA]/40 hover:bg-[#2563EB]/20"
+                  >
+                    <Github size={16} />
+                    GitHub
+                  </a>
+                )}
+
+                {item.githubSecondary && (
+                  <a
+                    href={item.githubSecondary}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-black/20 px-4 py-2 text-sm font-medium text-white/75 transition hover:bg-white/10 hover:text-white"
+                  >
+                    <Github size={16} />
+                    Repo 2
+                  </a>
+                )}
+              </div>
+            </article>
           ))}
         </div>
-
-        <div className="mt-4 text-sm text-blue-400">
-          Voir le détail →
-        </div>
-      </Link>
-    ))}
-  </div>
-</section>
-      {/* ===================== SECTION STACK ===================== */}
+      </section>
 
       <section
         id="stack"
@@ -616,6 +779,7 @@ export default function Page() {
                 Outils, logiciels et environnement de travail
               </h2>
             </div>
+
             <div className="inline-flex items-center gap-2 text-xs text-white/52 sm:text-sm">
               <Languages size={16} className="text-[#60A5FA]" />
               Français • Anglais courant • Espagnol basique
@@ -634,7 +798,6 @@ export default function Page() {
           </div>
         </div>
       </section>
-      {/* ===================== SECTION CONTACT ===================== */}
 
       <section
         id="contact"
@@ -671,6 +834,16 @@ export default function Page() {
               >
                 <Briefcase size={18} />
                 07 69 28 00 57
+              </a>
+
+              <a
+                href="https://www.linkedin.com/in/j%C3%A9r%C3%A9my-patole-674794161/"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-black/15 px-5 py-3 text-sm font-semibold text-black transition hover:bg-black hover:text-white sm:px-6"
+              >
+                <Linkedin size={18} />
+                Voir LinkedIn
               </a>
 
               <div className="inline-flex items-center justify-center gap-2 rounded-full border border-black/15 px-5 py-3 text-sm font-semibold text-black sm:px-6">
