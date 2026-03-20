@@ -48,7 +48,8 @@ export default async function UseCasePage({
   if (!useCase) {
     notFound();
   }
-
+const hasTools = Boolean(useCase.tools?.length);
+const hasSkills = Boolean(useCase.skills?.length);
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#050816] text-white">
       {/* BACKGROUND */}
@@ -251,51 +252,51 @@ export default async function UseCasePage({
       )}
 
       {/* TOOLS + SKILLS */}
-      {(useCase.tools?.length > 0 || useCase.skills?.length > 0) && (
-        <section className="mx-auto max-w-6xl px-4 py-3 sm:px-6 lg:px-8">
-          <div className="grid gap-4 lg:grid-cols-2">
-            {useCase.tools && useCase.tools.length > 0 && (
-              <div className="rounded-[1.5rem] border border-[#60A5FA]/16 bg-white/5 p-5 backdrop-blur-xl sm:p-6">
-                <div className="mb-5 flex items-center gap-2">
-                  <Wrench size={16} className="text-[#60A5FA]" />
-                  <h2 className="text-lg font-semibold">Tools</h2>
-                </div>
-
-                <div className="flex flex-wrap gap-2.5">
-                  {useCase.tools.map((tool) => (
-                    <span
-                      key={tool}
-                      className="rounded-full border border-[#60A5FA]/16 bg-[#2563EB]/10 px-3 py-1.5 text-xs text-[#D6E8FF]"
-                    >
-                      {tool}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {useCase.skills && useCase.skills.length > 0 && (
-              <div className="rounded-[1.5rem] border border-[#60A5FA]/16 bg-white/5 p-5 backdrop-blur-xl sm:p-6">
-                <div className="mb-5 flex items-center gap-2">
-                  <Sparkles size={16} className="text-[#60A5FA]" />
-                  <h2 className="text-lg font-semibold">Skills</h2>
-                </div>
-
-                <div className="flex flex-wrap gap-2.5">
-                  {useCase.skills.map((skill) => (
-                    <span
-                      key={skill}
-                      className="rounded-full border border-[#93C5FD]/14 bg-[#60A5FA]/10 px-3 py-1.5 text-xs text-[#DBEAFE]"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
+    {(Boolean(useCase.tools?.length) || Boolean(useCase.skills?.length)) && (
+  <section className="mx-auto max-w-6xl px-4 py-3 sm:px-6 lg:px-8">
+    <div className="grid gap-4 lg:grid-cols-2">
+      {Boolean(useCase.tools?.length) && (
+        <div className="rounded-[1.5rem] border border-[#60A5FA]/16 bg-white/5 p-5 backdrop-blur-xl sm:p-6">
+          <div className="mb-5 flex items-center gap-2">
+            <Wrench size={16} className="text-[#60A5FA]" />
+            <h2 className="text-lg font-semibold">Tools</h2>
           </div>
-        </section>
+
+          <div className="flex flex-wrap gap-2.5">
+            {useCase.tools!.map((tool) => (
+              <span
+                key={tool}
+                className="rounded-full border border-[#60A5FA]/16 bg-[#2563EB]/10 px-3 py-1.5 text-xs text-[#D6E8FF]"
+              >
+                {tool}
+              </span>
+            ))}
+          </div>
+        </div>
       )}
+
+      {Boolean(useCase.skills?.length) && (
+        <div className="rounded-[1.5rem] border border-[#60A5FA]/16 bg-white/5 p-5 backdrop-blur-xl sm:p-6">
+          <div className="mb-5 flex items-center gap-2">
+            <Sparkles size={16} className="text-[#60A5FA]" />
+            <h2 className="text-lg font-semibold">Skills</h2>
+          </div>
+
+          <div className="flex flex-wrap gap-2.5">
+            {useCase.skills!.map((skill) => (
+              <span
+                key={skill}
+                className="rounded-full border border-[#93C5FD]/14 bg-[#60A5FA]/10 px-3 py-1.5 text-xs text-[#DBEAFE]"
+              >
+                {skill}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  </section>
+)}
 
       {/* SUMMARY / POSITIONING */}
       <section className="mx-auto max-w-6xl px-4 pb-12 pt-3 sm:px-6 lg:px-8 lg:pb-16">
