@@ -222,7 +222,7 @@ export const portfolioConfig: PortfolioConfig = {
       },
     ],
     photo: {
-      src: "/hero-2.webp",
+      src: "/hero-jeremy.jpeg",
       alt: "Portrait de Jérémy-Morgan Patole",
     },
   },
