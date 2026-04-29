@@ -11,10 +11,10 @@ import {
   Layers3,
   Github,
 } from "lucide-react";
-import { getUseCaseBySlug, useCases } from "@/data/useCases";
+import { getUseCaseBySlug, portfolioConfig, useCaseItems } from "@/data/config";
 
 export function generateStaticParams() {
-  return useCases.map((item) => ({
+  return useCaseItems.map((item) => ({
     slug: item.slug,
   }));
 }
@@ -32,8 +32,33 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${useCase.title} | Jérémy Morgan`,
+    title: `${useCase.title} | ${portfolioConfig.identity.fullName}`,
     description: useCase.summary,
+    alternates: {
+      canonical: `/use-cases/${useCase.slug}`,
+    },
+    openGraph: {
+      title: `${useCase.title} | ${portfolioConfig.identity.fullName}`,
+      description: useCase.summary,
+      url: `${portfolioConfig.seo.siteUrl}/use-cases/${useCase.slug}`,
+      siteName: portfolioConfig.identity.fullName,
+      type: "article",
+      locale: "fr_FR",
+      images: [
+        {
+          url: "/opengraph-image",
+          width: 1200,
+          height: 630,
+          alt: `${useCase.title} - ${portfolioConfig.identity.fullName}`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${useCase.title} | ${portfolioConfig.identity.fullName}`,
+      description: useCase.summary,
+      images: ["/opengraph-image"],
+    },
   };
 }
 
@@ -48,8 +73,6 @@ export default async function UseCasePage({
   if (!useCase) {
     notFound();
   }
-const hasTools = Boolean(useCase.tools?.length);
-const hasSkills = Boolean(useCase.skills?.length);
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#050816] text-white">
       {/* BACKGROUND */}

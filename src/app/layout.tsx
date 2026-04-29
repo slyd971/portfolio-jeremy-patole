@@ -1,36 +1,53 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import type { Metadata } from "next";
+import { portfolioConfig } from "@/data/config";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+const siteUrl = portfolioConfig.seo.siteUrl;
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-export const metadata = {
-  title: "Jérémy Morgan | Data Analyst & Engineering Specialist",
-  description:
-    "Data Analyst & ingénieur orienté exécution. Analyse, data et projets techniques.",
+export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
+  title: portfolioConfig.seo.title,
+  description: portfolioConfig.seo.description,
+  keywords: portfolioConfig.seo.keywords,
+  alternates: {
+    canonical: "/",
+  },
+  authors: [{ name: portfolioConfig.identity.fullName }],
+  creator: portfolioConfig.identity.fullName,
+  publisher: portfolioConfig.identity.fullName,
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
 
   openGraph: {
-    title: "Jérémy Morgan Portfolio",
-    description:
-      "Portfolio data & engineering — projets, use cases et expertise technique.",
-    url: "https://ton-site.com",
-    siteName: "Jérémy Morgan Portfolio",
+    title: portfolioConfig.seo.title,
+    description: portfolioConfig.seo.description,
+    url: siteUrl,
+    siteName: portfolioConfig.identity.fullName,
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
+        alt: `${portfolioConfig.identity.fullName} - Data Analyst & Ingénierie aéronautique`,
       },
     ],
+    locale: "fr_FR",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: portfolioConfig.seo.title,
+    description: portfolioConfig.seo.description,
+    images: ["/opengraph-image"],
   },
 };
 
@@ -41,8 +58,8 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      lang={portfolioConfig.seo.lang}
+      className="h-full antialiased"
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
